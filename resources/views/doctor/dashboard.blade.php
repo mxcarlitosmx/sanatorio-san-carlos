@@ -248,14 +248,20 @@
                                 <td data-label="Estado de la Cita">
                                     @if($appointment->status === 'present')
                                         <span class="badge-status status-present"><i class="fa-solid fa-street-view me-1"></i> En Sala</span>
+                                    @elseif($appointment->status === 'completed')
+                                        <span class="badge-status" style="background: #e0e7ff; color: #4338ca;"><i class="fa-solid fa-check-double me-1"></i> Completada</span>
                                     @else
                                         <span class="badge-status status-pending"><i class="fa-regular fa-clock me-1"></i> Pendiente</span>
                                     @endif
                                 </td>
                                 <td class="text-md-end" data-label="Acción">
-                                    <a href="{{ route('doctor.attend', $appointment->id_appointment) }}" class="btn-attend">
-                                        Atender <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.75rem;"></i>
-                                    </a>
+                                    @if($appointment->status === 'completed')
+                                        <span class="text-muted fw-bold" style="font-size: 0.9rem;"><i class="fa-solid fa-lock me-1"></i> Finalizada</span>
+                                    @else
+                                        <a href="{{ route('doctor.attend', $appointment->id_appointment) }}" class="btn-attend">
+                                            Atender <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.75rem;"></i>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

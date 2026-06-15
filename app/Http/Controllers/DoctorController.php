@@ -85,7 +85,7 @@ class DoctorController extends Controller
                 // Creamos la cabecera de la receta
                 $id_prescription = DB::table('prescriptions')->insertGetId([
                     'folio'           => 'REC-' . time(),
-                    'status'          => 'pending', // Queda pendiente para Farmacia
+                    // Queda pendiente para Farmacia
                     'id_consultation' => $id_consultation,
                     'created_at'      => now(),
                     'updated_at'      => now()
