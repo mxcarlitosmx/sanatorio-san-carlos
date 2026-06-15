@@ -19,7 +19,7 @@ class PharmacistController extends Controller
         $pharmacist = Pharmacist::where('id_user', Auth::id())->firstOrFail();
 
         // 1. Recetas pendientes: Buscamos las recetas cuyo ID *NO EXISTA* en pharmacy_payments
-        $pending_prescriptions = Prescription::with('consultation.appointment.patient.user', 'consultation.doctor.user')
+        $pending_prescriptions = Prescription::with('consultation.appointment.patient.user', 'consultation.appointment.doctor.user')
             ->whereNotIn('id_prescription', function($query) {
                 $query->select('id_prescription')->from('pharmacy_payments');
             })
@@ -47,7 +47,7 @@ class PharmacistController extends Controller
     {
         $prescription = Prescription::with([
             'consultation.appointment.patient.user', 
-            'consultation.doctor.user'
+            'consultation.appointment.doctor.user' // <-- AQUÍ ESTÁ LA CORRECCIÓN
         ])->findOrFail($id_prescription);
 
         // Traemos los medicamentos recetados cruzados con el catálogo actual usando DB Facade

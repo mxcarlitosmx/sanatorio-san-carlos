@@ -108,12 +108,9 @@
                                             Dr(a). {{ $prescription->consultation->doctor->user->first_name ?? 'Médico' }}
                                         </td>
                                         <td>
-                                            <form action="{{ route('pharmacist.dispense', $prescription->id_prescription) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <button type="submit" class="btn-surtir">
-                                                    <i class="fa-solid fa-box-open me-1"></i> Surtir
-                                                </button>
-                                            </form>
+                                            <a href="{{ route('pharmacist.dispense', $prescription->id_prescription) }}" class="btn-surtir text-decoration-none d-inline-block">
+                                                <i class="fa-solid fa-box-open me-1"></i> Surtir
+                                            </a>
                                             <a href="#" class="btn btn-sm btn-outline-secondary ms-1 rounded-3">
                                                 <i class="fa-regular fa-eye"></i>
                                             </a>

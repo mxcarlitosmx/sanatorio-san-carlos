@@ -73,14 +73,6 @@ Route::middleware(['role:doctor'])->group(function () {
     
 });
 
-//MÓDULO DE CAJA CENTRAL
-Route::middleware(['role:cashier'])->group(function () {
-    
-    // Panel Principal de Caja
-    Route::get('/cashier/dashboard', function () {
-        return view('cashier.dashboard');
-    })->name('cashier.dashboard');
-});
 
 //MÓDULO DE FARMACIA
 Route::middleware(['role:pharmacist'])->group(function () {
