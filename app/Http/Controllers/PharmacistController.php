@@ -57,7 +57,12 @@ class PharmacistController extends Controller
             ->select('prescription_items.*', 'medicines.name', 'medicines.price', 'medicines.stock', 'medicines.dosage')
             ->get();
 
-        return view('pharmacist.dispense', compact('prescription', 'items'));
+
+        // 1. NUEVO: Traemos todo el catálogo que tenga stock disponible
+        $inventory = \App\Models\Medicine::where('stock', '>', 0)->get();
+
+        // 2. Pasamos la nueva variable $inventory a la vista
+        return view('pharmacist.dispense', compact('prescription', 'items', 'inventory'));    
     }
 
     /**

@@ -96,6 +96,33 @@
                         <form action="{{ route('pharmacist.confirm_dispense', $prescription->id_prescription) }}" method="POST">
                             @csrf
                             
+
+                            <div class="row mb-4 align-items-end" style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px dashed #cbd5e1;">
+    <div class="col-md-8">
+        <label class="form-label fw-bold text-muted" style="font-size: 0.85rem;"><i class="fa-solid fa-plus-circle"></i> AGREGAR ARTÍCULO EXTRA (VENTA LIBRE)</label>
+        <select id="extraMedicineSelect" class="form-select border-2">
+            <option value="">-- Selecciona un producto del catálogo --</option>
+            @foreach($inventory as $med)
+                <option value="{{ $med->id_medicine }}" 
+                        data-name="{{ $med->name }}" 
+                        data-price="{{ $med->price }}" 
+                        data-stock="{{ $med->stock }}" 
+                        data-dosage="{{ $med->dosage }}">
+                    {{ $med->name }} ({{ $med->dosage }}) - ${{ number_format($med->price, 2) }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-md-4">
+        <button type="button" class="btn btn-outline-dark w-100 fw-bold border-2" onclick="addExtraItem()">
+            Añadir a la Cuenta
+        </button>
+    </div>
+</div>
+
+
+
+
                             <div class="table-responsive mb-4">
                                 <table class="table table-pharma mb-0">
                                     <thead>
@@ -149,6 +176,62 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+    function addExtraItem() {
+        const select = document.getElementById('extraMedicineSelect');
+        const option = select.options[select.selectedIndex];
+
+        // Si no seleccionó nada, no hacemos nada
+        if (!option.value) return;
+
+        const id = option.value;
+        const name = option.getAttribute('data-name');
+        const dosage = option.getAttribute('data-dosage');
+        const price = parseFloat(option.getAttribute('data-price')).toFixed(2);
+        const stock = option.getAttribute('data-stock');
+
+        // Validamos que no lo haya agregado ya
+        if (document.querySelector(`input[name="items[${id}]"]`)) {
+            Swal.fire({ icon: 'warning', title: 'Ups', text: 'Este artículo ya está en la cuenta.' });
+            return;
+        }
+
+        const tbody = document.querySelector('.table-pharma tbody');
+
+        // Quitamos el mensaje de "No hay medicamentos" si la tabla estaba vacía
+        const emptyMsg = tbody.querySelector('td[colspan]');
+        if (emptyMsg) emptyMsg.parentElement.remove();
+
+        // Creamos la nueva fila
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>
+                <span class="fw-bold" style="color: var(--card-cyan-top);">${name}</span> 
+                <span class="badge bg-secondary ms-2" style="font-size: 0.65rem;">EXTRA</span><br>
+                <small class="text-muted">${dosage}</small>
+            </td>
+            <td>Venta Libre</td>
+            <td class="text-center fw-bold">N/A</td>
+            <td class="fw-bold">$${price}</td>
+            <td>
+                <input type="number" name="items[${id}]" class="sanatorio-input" value="1" min="1" max="${stock}" required>
+                <div class="mt-1" style="font-size: 0.75rem; color: #64748b;">En stock: ${stock}</div>
+            </td>
+        `;
+
+        // Lo agregamos a la tabla visualmente
+        tbody.appendChild(tr);
+
+        // Reseteamos el selector
+        select.value = "";
+    }
+</script>
+
+
+
+
 
 </body>
 </html>
