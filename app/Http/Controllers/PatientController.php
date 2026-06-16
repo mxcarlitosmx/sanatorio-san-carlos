@@ -7,23 +7,41 @@ use App\Models\Appointment;
 use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB; // <-- ¡Importante! Agregamos el Facade DB
 
 class PatientController extends Controller
 {
     /**
-     * 1. Panel Principal: Mis Citas Reservadas
+     * 1. Panel Principal: Mis Citas Reservadas y Recetas
      */
     public function dashboard()
     {
         $patient = Patient::where('id_user', Auth::id())->firstOrFail();
 
+        // Citas del paciente
         $appointments = Appointment::with('doctor.user')
             ->where('id_patient', $patient->id_patient)
             ->orderBy('date', 'asc')
             ->orderBy('time', 'asc')
             ->get();
 
-        $prescriptions = [];
+        // Recetas recientes del paciente usando DB Facade para saltar directamente
+        $prescriptions = DB::table('prescriptions')
+            ->join('consultations', 'prescriptions.id_consultation', '=', 'consultations.id_consultation')
+            ->join('appointments', 'consultations.id_appointment', '=', 'appointments.id_appointment')
+            ->join('doctors', 'appointments.id_doctor', '=', 'doctors.id_doctor')
+            ->join('users', 'doctors.id_user', '=', 'users.id_user')
+            ->where('appointments.id_patient', $patient->id_patient)
+            ->orderBy('prescriptions.created_at', 'desc')
+            ->select(
+                'prescriptions.id_prescription', 
+                'prescriptions.folio',
+                'prescriptions.created_at', 
+                'users.first_name as doctor_name',
+                'doctors.speciality'
+            )
+            ->take(3)
+            ->get();
 
         return view('patient.dashboard', compact('appointments', 'prescriptions'));
     }
