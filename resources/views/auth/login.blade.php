@@ -4,25 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sanatorio San Carlos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
     <style>
-        /* REGLA DE ORO ANTI-DESBORDAMIENTOS */
-        *, *::before, *::after {
-            box-sizing: border-box !important;
-        }
+        *, *::before, *::after { box-sizing: border-box !important; }
 
-        /* DEFINICIÓN DE VARIABLES GLOBALES */
         :root {
-            --bg-page-light: #ffffff; /* Blanco puro arriba */
-            --bg-page-celeste: #dbeafe; /* Celeste muy suave difuminado abajo */
-            --card-blue-top: #3a9edb; /* Azul claro para la tarjeta */
-            --card-blue-bottom: #164ca7; /* Azul oscuro para la tarjeta */
+            --bg-page-light: #ffffff; 
+            --bg-page-celeste: #dbeafe; 
+            --card-blue-top: #3a9edb; 
+            --card-blue-bottom: #164ca7; 
             --text-white: #ffffff;
         }
 
-        /* CONFIGURACIÓN BASE: FONDO CLARO PARA RESALTAR EL LOGO */
         html, body {
             min-height: 100vh;
             margin: 0;
@@ -34,7 +30,6 @@
             flex-direction: column;
         }
 
-        /* ESTRUCTURA FLEXBOX: Separa el logo de la tarjeta central */
         .page-wrapper {
             display: flex;
             flex-direction: column;
@@ -42,7 +37,6 @@
             width: 100%;
         }
 
-        /* LOGO HEADER: Toma su espacio natural arriba */
         .logo-header {
             padding: 20px 30px 0 30px;
             width: 100%;
@@ -57,7 +51,6 @@
             transition: all 0.3s ease;
         }
 
-        /* CONTENEDOR PRINCIPAL: Centra la tarjeta */
         .main-content {
             flex: 1;
             display: flex;
@@ -67,11 +60,10 @@
             padding: 10px 20px 40px 20px; 
         }
 
-        /* TARJETA ESTILO PILL (Recupera su color azul para destacar sobre el fondo claro) */
         .login-card-futuristic {
             background: linear-gradient(180deg, var(--card-blue-top) 0%, var(--card-blue-bottom) 100%);
             border-radius: 40px; 
-            box-shadow: 0 25px 50px rgba(22, 76, 167, 0.3); /* Sombra azulada sutil */
+            box-shadow: 0 25px 50px rgba(22, 76, 167, 0.3); 
             width: 100%;
             max-width: 420px; 
             padding: 45px 35px;
@@ -84,11 +76,26 @@
             font-weight: 400;
             letter-spacing: 3px;
             text-transform: uppercase;
-            margin-bottom: 35px;
+            margin-bottom: 25px; /* Reducido un poco para hacerle espacio a la píldora de error */
             text-align: center;
         }
 
-        /* INPUTS OVALADOS */
+        /* DISEÑO DE LA PÍLDORA DE ERROR */
+        .alert-pill-danger {
+            background: rgba(239, 68, 68, 0.3);
+            border: 2px solid #ef4444;
+            border-radius: 50px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 12px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            backdrop-filter: blur(5px);
+        }
+
         .input-pill-group {
             position: relative;
             margin-bottom: 20px;
@@ -141,7 +148,6 @@
             font-size: 1.1rem;
         }
 
-        /* ENLACE Y BOTÓN */
         .sanatorio-link-white {
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
@@ -181,7 +187,6 @@
             border-color: rgba(255, 255, 255, 0.5);
         }
 
-        /* ZONA DE REGISTRO */
         .register-section {
             margin-top: 35px;
             padding-top: 25px;
@@ -207,25 +212,13 @@
             transition: all 0.2s ease;
         }
 
-        .register-link:hover {
-            border-bottom-color: var(--text-white);
-        }
+        .register-link:hover { border-bottom-color: var(--text-white); }
 
-        /* RESPONSIVIDAD PARA TABLETS Y MÓVILES */
         @media (max-width: 991px) {
-            .logo-header {
-                text-align: center;
-                padding: 20px 20px 0 20px;
-            }
-            .logo-header img {
-                height: 100px;
-            }
-            .main-content {
-                padding: 20px;
-            }
-            .login-card-futuristic {
-                padding: 35px 25px;
-            }
+            .logo-header { text-align: center; padding: 20px 20px 0 20px; }
+            .logo-header img { height: 100px; }
+            .main-content { padding: 20px; }
+            .login-card-futuristic { padding: 35px 25px; }
         }
     </style>
 </head>
@@ -244,12 +237,20 @@
                 <form action="{{ url('/login') }}" method="POST">
                     @csrf 
 
+                    @if($errors->any() || session('error'))
+                        <div class="alert-pill-danger animate__animated animate__shakeX">
+                            <i class="fa-solid fa-triangle-exclamation me-1"></i>
+                            {{ session('error') ?? $errors->first() }}
+                        </div>
+                    @endif
+
                     <div class="input-pill-group">
                         <i class="fa-regular fa-user icon-left"></i>
                         <input type="text" 
                                name="login_input" 
                                class="sanatorio-input-pill" 
                                placeholder="Usuario o No. Empleado" 
+                               value="{{ old('login_input') }}"
                                required>
                     </div>
 
@@ -280,7 +281,7 @@
         </main>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         function togglePasswordVisibility() {
