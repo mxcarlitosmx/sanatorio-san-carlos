@@ -1,4 +1,4 @@
-# Sanatorio San Carlos - Sistema de Gestión Hospitalaria (HIS/ERP)
+# Sanatorio San Carlos - Sistema de Gestión Hospitalaria
 
 Sistema integral web diseñado para la administración operativa, clínica y financiera del "Sanatorio San Carlos". Este proyecto digitaliza el flujo completo de la unidad médica, garantizando la modularidad del código y una alta eficiencia en el procesamiento de transacciones.
 
@@ -10,7 +10,7 @@ El sistema se rige bajo una estricta Arquitectura Cliente-Servidor de Tres Capas
 
 * **Front-End (Capa de Presentación):** Construida con estándares web como HTML5, CSS3 y JavaScript. Utiliza el framework Bootstrap 5 para el diseño responsivo y el motor de plantillas Blade para el renderizado seguro desde el servidor.  
 * **Back-End (Capa de Lógica):** Procesamiento central desarrollado en PHP 8.3 utilizando el framework Laravel 12. El patrón MVC y el ORM Eloquent automatizan transacciones complejas de manera segura.  
-* **Base de Datos (Capa de Datos):** Soportada por MySQL 8. Seleccionada por su cumplimiento estricto de las propiedades ACID (Atomicidad, Consistencia, Aislamiento, Durabilidad), lo cual es obligatorio para manejar flujos financieros y expedientes clínicos sin pérdida de datos.  
+* **Base de Datos (Capa de Datos):** Soportada por MySQL 8.  
 * **Despliegue Cloud (Producción):** Alojado en una máquina virtual de Microsoft Azure (Standard_B2ts_v2) sobre Ubuntu Server 24.04 LTS, operando con servidor web Nginx, dominio dinámico en DuckDNS y seguridad HTTPS mediante Let's Encrypt (Certbot).
 
 ---
